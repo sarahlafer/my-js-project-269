@@ -1,51 +1,38 @@
-// console.log("Hello from src/index.js!");
+// const button = document.querySelector("#click-me");
 
-const list = document.querySelector("#players");
-// console.log(list);
-list.insertAdjacentHTML("beforeend", "<li>Luke</li>");
-list.insertAdjacentHTML("afterbegin", "<li>Han</li>");
+// button.addEventListener('click', (event) => {
+//   event.currentTarget.innerText = "Hold still";
+//   event.currentTarget.setAttribute("disabled", "");
+// });
 
-const countries = document.querySelectorAll("#fifa-wins li");
-// console.log(countries);
-// => NODE LIST
+const list = document.querySelector("#results");
+const form = document.querySelector("#search-movies");
+const input = document.querySelector("#keyword");
 
-countries.forEach((country) => {
-  // console.log(country.innerText);
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  fetch(`http://www.omdbapi.com/?s=${input.value}&apikey=adf1f2d7`)
+  .then(response => response.json())
+  .then((data) => {
+    data.Search.forEach((result) => {
+      console.log(result);
+      const movie = `<li class="list-inline-item">
+      <p>${result.Title}</p>
+      <img src="${result.Poster}">
+      </li>`;
+      list.insertAdjacentHTML('afterbegin', movie);
+    });
+  });
 });
 
-const fifaList = document.querySelector("#fifa-wins");
-// console.log(fifaList);
-// => DOM OBJECT
-
-// console.log(fifaList);
-fifaList.insertAdjacentHTML('beforeend', '<li>France (2 wins)</li>');
-
-// fifaList.style.display = "none";
-// fifaList.style.display = "";
-
-fifaList.classList.add("green");
-
-const email = document.querySelector("#email");
-// const email = document.getElementById("email");
-
-email.value = "sarah@gmail.com";
-
-// element.addEventListener(EVENT_TYPE, (event) => {
-
-// });
-
-// const romain = document.querySelector("#romain");
-
-// // console.log(romain);
-
-// romain.addEventListener("click", (event) => {
-//   event.currentTarget.classList.toggle("img-circle");
-// });
-
-const images = document.querySelectorAll("img");
-
-images.forEach((img) => {
-  img.addEventListener('click', (event) => {
-    event.currentTarget.classList.toggle('img-circle');
+const search = document.querySelector("#search");
+search.addEventListener("keyup", (event) => {
+  fetch("https://places-dsn.algolia.net/1/places/query", {
+    method: "POST",
+    body: JSON.stringify({ query: event.currentTarget.value })
+  })
+  .then(response => response.json())
+  .then((data) => {
+    console.log(data);
   });
 });
